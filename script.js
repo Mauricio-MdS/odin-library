@@ -6,6 +6,7 @@ const table = document.querySelector('tbody')
 const newTitle = document.querySelector('#title')
 const newAuthor = document.querySelector('#author')
 const newRead = document.querySelector('#read')
+const close = document.querySelector('.close')
 
 form.addEventListener('submit', (event) => {
   event.preventDefault()
@@ -81,6 +82,7 @@ function newBook () {
     newRead.checked
   ))
   form.reset()
+  close.click()
   updateView()
 }
 
