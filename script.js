@@ -1,6 +1,17 @@
 let books = []
 let id = 1
 
+const form = document.querySelector('form')
+const table = document.querySelector('tbody')
+const newTitle = document.querySelector('#title')
+const newAuthor = document.querySelector('#author')
+const newRead = document.querySelector('#read')
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault()
+  newBook()
+})
+
 class Book {
   constructor (name, author, read) {
     this.id = id++
@@ -10,31 +21,6 @@ class Book {
   }
 }
 
-const save = document.querySelector('.save')
-const table = document.querySelector('tbody')
-
-function updateView () {
-  table.innerHTML = ''
-  books.forEach(book => {
-    display(book)
-  })
-}
-
-books.push(
-  new Book('Senhor dos Aneis', 'Tolkien', true),
-  new Book('Fisica avancada', 'Miguelito', false)
-)
-
-updateView()
-
-function display (book) {
-  const newRow = document.createElement('tr')
-  newRow.appendChild(displayName(book))
-  newRow.appendChild(displayAuthor(book))
-  newRow.appendChild(displayRead(book))
-  newRow.appendChild(BuildDelete(book))
-  table.appendChild(newRow)
-}
 function BuildDelete (book) {
   const deleteCell = document.createElement('td')
   const deleteButton = document.createElement('button')
@@ -46,9 +32,35 @@ function BuildDelete (book) {
   return deleteCell
 }
 
+function changeRead (checkbox) {
+  const book = books.find(book => book.id === parseInt(checkbox.dataset.id))
+  book.read = checkbox.checked
+}
+
 function deleteBook (id) {
   books = books.filter(book => book.id !== id)
   updateView()
+}
+
+function display (book) {
+  const newRow = document.createElement('tr')
+  newRow.appendChild(displayName(book))
+  newRow.appendChild(displayAuthor(book))
+  newRow.appendChild(displayRead(book))
+  newRow.appendChild(BuildDelete(book))
+  table.appendChild(newRow)
+}
+
+function displayAuthor (book) {
+  const cell = document.createElement('td')
+  cell.textContent = book.author
+  return cell
+}
+
+function displayName (book) {
+  const cell = document.createElement('td')
+  cell.textContent = book.name
+  return cell
 }
 
 function displayRead (book) {
@@ -62,19 +74,19 @@ function displayRead (book) {
   return cell
 }
 
-function changeRead (checkbox) {
-  const book = books.find(book => book.id === parseInt(checkbox.dataset.id))
-  book.read = checkbox.checked
+function newBook () {
+  books.push(new Book(
+    newTitle.value,
+    newAuthor.value,
+    newRead.checked
+  ))
+  form.reset()
+  updateView()
 }
 
-function displayAuthor (book) {
-  const cell = document.createElement('td')
-  cell.textContent = book.author
-  return cell
-}
-
-function displayName (book) {
-  const cell = document.createElement('td')
-  cell.textContent = book.name
-  return cell
+function updateView () {
+  table.innerHTML = ''
+  books.forEach(book => {
+    display(book)
+  })
 }
